@@ -55,7 +55,7 @@ class App extends Component {
         const {words, score, gameOver} = this.props.gameProps;
         return (
             <main className="App">
-                Saymon says: {score}
+                <h1 className="app__title h1"> Saymon says: {score} </h1>
                 {/*
                     Меню с выбором сложности
                       Компонет дроплист
@@ -73,25 +73,23 @@ class App extends Component {
                 { gameOver ? this.endScreen(score) :
 
                     <div className="play-ground">
-                        <div className="play-ground__list">
-                            <div className='balls'>
-                                <ul className='balls__list'>
-                                    {
-                                        Object.keys(words).map(
-                                            (word) => {
-                                                return <Ball
-                                                    key={word}
-                                                    name={word}
-                                                    color={words[word].color}
-                                                    active={words[word].active}
-                                                    avaliable={this.props.gameProps.buttonAvaliable}
-                                                    play={this.play}
-                                                />
-                                            }
-                                        )
-                                    }
-                                </ul>
-                            </div>
+                        <div className='buttons'>
+                            <ul className='buttons__list'>
+                                {
+                                    Object.keys(words).map(
+                                        (word) => {
+                                            return <Ball
+                                                key={word}
+                                                name={word}
+                                                color={words[word].color}
+                                                active={words[word].active}
+                                                avaliable={this.props.gameProps.buttonAvaliable}
+                                                play={this.play}
+                                            />
+                                        }
+                                    )
+                                }
+                            </ul>
                         </div>
 
                         <button

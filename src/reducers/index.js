@@ -8,19 +8,31 @@ import {RED, GREEN, BLUE, ORANGE} from '../constants'
 
 const initialWordsState = {
     ALFA: {
-        color: RED,
+        color: {
+            name: 'red',
+            value: RED
+        },
         active: false
     },
     OMEGA: {
-        color: ORANGE,
+        color: {
+            name: 'orange',
+            value: ORANGE
+        },
         active: false
     },
     BETHA: {
-        color: BLUE,
+        color: {
+            name: 'blue',
+            value: BLUE
+        },
         active: false
     },
     THETHA: {
-        color: GREEN,
+        color: {
+            name: 'green',
+            value: GREEN
+        },
         active: false
     },
 };

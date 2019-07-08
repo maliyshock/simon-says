@@ -46,11 +46,13 @@ class Ball extends Component {
     }
 
     render() {
-        const style = (this.props.active) ? {'backgroundColor': this.props.color} : {'backgroundColor': 'white'};
+        const style = (this.props.active) ? {'backgroundColor': this.props.color.value} : {'backgroundColor': ''};
         const isDisabled = !this.props.avaliable;
+        const buttonClassNames = `buttons__button buttons__button--color-${this.props.color.name}`;
         return(
-            <li>
+            <li className='buttons__item'>
                 <button
+                    className={buttonClassNames}
                     onClick={ () => this.clickOnButton()  }
                     style={style}
                     disabled={isDisabled}
