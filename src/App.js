@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import './App.css';
 
 import {connect} from 'react-redux'
 import {createSequence, playSequence, giveControl, resetCycles} from './actions/index';
 import Ball from './components/Ball'
+import { ICONS } from './constants'
 
 class App extends Component {
 
@@ -38,7 +38,7 @@ class App extends Component {
                     this.props.giveControl();
                     this.props.resetCycles();
                 }
-            }, 1000);
+            }, 1300);
     }
 
     endScreen(score) {
@@ -52,53 +52,75 @@ class App extends Component {
     }
 
     render() {
-        const {words, score, gameOver} = this.props.gameProps;
+        const {words, score, gameOver, level} = this.props.gameProps;
+        let lineClassNames = 'buttons__line';
+        let levelContainer = 'buttons__level-container';
+        if(this.props.gameProps.buttonAvaliable) {
+            lineClassNames = lineClassNames + ' active';
+            levelContainer = levelContainer + ' active';
+        }
+
+
         return (
-            <main className="App">
-                <h1 className="app__title h1"> Saymon says: {score} </h1>
-                {/*
-                    Меню с выбором сложности
-                      Компонет дроплист
-                      Компонент кнопка
-                      Доска победителей
-                      Кнопка назад
+            <main className="app">
+                <div className="app__inner">
+                    <h1 className="app__title h2"> Saymon says</h1>
 
-                    Игровая площадка
-                      Список шаров которые проигрываются и на которые можно кликать
-                      Сложность
-                      Счет
-                      Кнопка меню
-                  */}
-
-                { gameOver ? this.endScreen(score) :
-
-                    <div className="play-ground">
-                        <div className='buttons'>
-                            <ul className='buttons__list'>
-                                {
-                                    Object.keys(words).map(
-                                        (word) => {
-                                            return <Ball
-                                                key={word}
-                                                name={word}
-                                                color={words[word].color}
-                                                active={words[word].active}
-                                                avaliable={this.props.gameProps.buttonAvaliable}
-                                                play={this.play}
-                                            />
-                                        }
-                                    )
-                                }
-                            </ul>
-                        </div>
-
-                        <button
-                            onClick={ () => this.play() }
-                            type={'button'}
-                        >Play Sequence</button>
+                    <div className="app__waves">
+                        {ICONS.WAVE}
+                        {ICONS.WAVE}
+                        {ICONS.WAVE}
                     </div>
-                }
+                    {/*
+                        Меню с выбором сложности
+                          Компонет дроплист
+                          Компонент кнопка
+                          Доска победителей
+                          Кнопка назад
 
+                        Игровая площадка
+                          Список шаров которые проигрываются и на которые можно кликать
+                          Сложность
+                          Счет
+                          Кнопка меню
+                      */}
+
+                    { gameOver ? this.endScreen(score) :
+
+                        <div className="play-ground">
+                            <div className='buttons'>
+                                <div className='buttons__list'>
+                                    <div className={`${lineClassNames} butons__line--position-vertical`}></div>
+                                    <div className={`${lineClassNames} butons__line--position-horizontal`}></div>
+                                    <div className={levelContainer}>
+                                        <h2 className='buttons__go h3'>GO!</h2>
+                                        <h2 className="buttons__score h2">{score}</h2>
+                                        <div className="buttons__level-text">Level: {level}</div>
+                                    </div>
+                                    {
+                                        Object.keys(words).map(
+                                            (word) => {
+                                                return <Ball
+                                                    key={word}
+                                                    name={word}
+                                                    color={words[word].color}
+                                                    active={words[word].active}
+                                                    avaliable={this.props.gameProps.buttonAvaliable}
+                                                    play={this.play}
+                                                />
+                                            }
+                                        )
+                                    }
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={ () => this.play() }
+                                type={'button'}
+                            >Play Sequence</button>
+                        </div>
+                    }
+                </div>
             </main>
         );
     }

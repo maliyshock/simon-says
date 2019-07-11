@@ -1,4 +1,4 @@
-import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD } from '../constants'
+import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD, INCREASE_LEVEL } from '../constants'
 
 export function createSequence() {
     return async dispatch => {
@@ -53,6 +53,13 @@ export function increaseCycles(maxGameCycle) {
     return {
         type: INCREASE_CYCLES,
         payload: maxGameCycle
+    }
+}
+
+export function increaseLevel(level) {
+    return {
+        type: INCREASE_LEVEL,
+        payload: level
     }
 }
 

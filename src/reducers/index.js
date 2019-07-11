@@ -2,15 +2,15 @@ import {combineReducers} from 'redux';
 import {sequence} from './gamePlayGround';
 
 import {MAX_CYCLE} from '../constants'
-import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES } from '../constants'
+import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, INCREASE_LEVEL } from '../constants'
 import {RED, GREEN, BLUE, ORANGE} from '../constants'
 
 
 const initialWordsState = {
     ALFA: {
         color: {
-            name: 'red',
-            value: RED
+            name: 'blue',
+            value: BLUE
         },
         active: false
     },
@@ -23,8 +23,8 @@ const initialWordsState = {
     },
     BETHA: {
         color: {
-            name: 'blue',
-            value: BLUE
+            name: 'red',
+            value: RED
         },
         active: false
     },
@@ -72,6 +72,10 @@ let gameProps = function gameProps(state = initialGamePropsState, action) {
 
         case RESET_CYCLES:
             return {...state, cycle: 0};
+
+        case INCREASE_LEVEL:
+            const level = action.payload;
+            return {...state, level: level+1};
 
         case INCREASE_CYCLES:
             const maxGameCycle = action.payload;

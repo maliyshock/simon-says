@@ -1,0 +1,380 @@
+$orange:    #FDBA63;
+$blue:      #6FC3E0;
+$red:       #FC6769;
+$green:     #A5C94B;
+
+$transition-time: 0.3s;
+$med-transition-time: 0.7s;
+$long-transition-time: 1.25s;
+
+$active-item:     50;
+$title:           40;
+$level-container: 40;
+$line:            30;
+$list:            20;
+$waves:           1;
+$buttons:         5;
+
+svg {
+  width:100%;
+  overflow:visible;
+}
+
+body {
+  margin: 0;
+}
+
+
+h1,h2 {
+  margin: 0;
+}
+
+
+.h1 {
+  font-size: 120px;
+  line-height: 90px;
+}
+
+.h2 {
+  font-size: 72px;
+  line-height: 52px;
+}
+
+.h3 {
+  font-size: 60px;
+}
+
+
+.wave {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  animation: wave 7s linear;
+  animation-iteration-count: infinite;
+  fill: #4478e3;
+  width: 100%;
+  overflow: visible;
+  opacity: 0.9;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  //align-items: center;
+
+  width: 100%;
+  min-height: 100vh;
+
+  & > * {
+    width: 100%;
+  }
+
+  &__inner{
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+  }
+
+  &__waves {
+    width: 100%;
+    position: fixed;
+    z-index: $waves;
+    bottom: 0;
+    left: 0;
+
+    & .wave:nth-last-child(1) {
+      animation-duration: 10s;
+      animation-direction: reverse;
+      opacity: .5
+    }
+    & .wave:nth-last-child(2) {
+      animation-duration: 14s;
+      opacity: .3;
+    }
+  }
+  &__title {
+    position: relative;
+    z-index: $title;
+
+    width: 100%;
+
+    text-align: center;
+
+    //transition: transform 1s;
+    //transform: scale(4) translateY(100%);
+    //opacity: 0;
+  }
+}
+
+.play-ground {
+  flex-grow: 1;
+  flex-shrink: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.buttons {
+  $c: &;
+
+  position: relative;
+  z-index: $buttons;
+
+  width: 35%;
+  max-width: 800px;
+
+  margin: 0 auto;
+
+  transform: rotate(45deg);
+
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: (800 / 800) * 100%;
+  }
+
+  &__list, &__sub-list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
+  }
+
+  &__list {
+    z-index: $list;
+  }
+
+  &__item {
+    &--color-orange {
+      background-color: transparentize($orange, 0.7);
+    }
+
+    &--color-blue {
+      background-color: transparentize($blue, 0.7);
+    }
+
+    &--color-red {
+      background-color: transparentize($red, 0.7);
+    }
+
+    &--color-green {
+      background-color: transparentize($green, 0.7);
+    }
+  }
+
+  &__item {
+    &.active, &:hover:not(.disabled) {
+      position: relative;
+      z-index: $active-item;
+    }
+  }
+
+  &__level-container {
+    position: absolute;
+    z-index: $level-container;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    width: 150px;
+    height: 150px;
+
+    top: calc(50% - 75px);
+    left: calc(50% - 75px);
+
+    transform: rotate(-45deg);
+
+    color: #fff;
+  }
+
+  &__go {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+
+    //transition: opacity $transition-time, max-height $transition-time;
+
+    .active & {
+      animation: blink $med-transition-time;
+      animation-delay: $med-transition-time;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  &__score, &__level-text {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+
+    opacity: 0;
+
+    text-align: center;
+
+    transition: opacity $transition-time, max-height $transition-time;
+
+    .active & {
+      opacity: 1;
+      max-height: 100%;
+
+      transition-delay: 1.5s;
+    }
+  }
+
+  &__line {
+    width: 100px;
+    height: 85%;
+
+    position: absolute;
+    left: calc(50% - 50px);
+    top: 7.5%;
+    z-index: $line;
+
+    background-color: #333;
+
+    border-radius: 100px;
+
+    transform: scaleY(0) translateY(-9%);
+    transform-origin: 0 50%;
+
+    transition: transform $med-transition-time cubic-bezier(.2,1.76,.47,.29);
+
+    &.active {
+      transform: scaleY(1) translateY(0%);
+      border-radius: 100px;
+
+      & + & {
+        transform-origin: 50% 50%;
+        transition-delay: 0.2s;
+        transform: rotate(90deg) scaleY(1) translateY(0%);
+      }
+    }
+
+    & + & {
+      transform: rotate(0deg) scaleY(0) translateY(-9%);
+    }
+  }
+
+  &__icon {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    min-width: 60px;
+    height: 70%;
+    min-height: 60px;
+
+    border-radius: 100%;
+    transform: rotate(-45deg);
+
+    & svg {
+      width: 60%;
+      height: 60%;
+    }
+
+    #{$c}__button--color-orange & {
+      background-color: $orange;
+    }
+
+    #{$c}__button--color-blue & {
+      background-color: $blue;
+    }
+
+    #{$c}__button--color-red & {
+      background-color: $red;
+    }
+
+    #{$c}__button--color-green & {
+      background-color: $green;
+    }
+  }
+
+  &__button {
+    padding: 40px;
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    box-shadow: none;
+
+    background-color: transparent;
+
+    transition: background-color $transition-time, transform $transition-time;
+
+    &:hover:not(:disabled) {
+      cursor: pointer;
+      transform: translateY(-2.5%) translateX(-2.5%);
+    }
+
+    &--color-orange {
+      background-color: transparentize($orange, 0.7);
+
+      &:hover:not(:disabled) {
+        background-color: transparentize($orange, 0);
+      }
+    }
+
+    &--color-blue {
+      background-color: transparentize($blue, 0.7);
+
+      &:hover:not(:disabled) {
+        background-color: transparentize($blue, 0);
+      }
+    }
+
+    &--color-red {
+      background-color: transparentize($red, 0.7);
+
+      &:hover:not(:disabled) {
+        background-color: transparentize($red, 0);
+      }
+    }
+
+    &--color-green {
+      background-color: transparentize($green, 0.7);
+
+      &:hover:not(:disabled) {
+        background-color: transparentize($green, 0);
+      }
+    }
+  }
+}
+
+@keyframes wave {
+  to {transform: translateX(-100%);}
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+    max-height: 100%;
+  }
+  50% {
+    opacity: 1;
+    max-height: 100%;
+  }
+  99% {
+    max-height: 100%;
+  }
+  100% {
+    max-height: 0;
+    opacity: 0;
+  }
+}
