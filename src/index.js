@@ -21,7 +21,7 @@ ReactDOM.render(
         <BrowserRouter>
             <Router history={history}>
                 <div>
-                    <Route path={'/'} component={App} />
+                    <Route path={process.env.PUBLIC_URL + '/'} component={App} />
                 </div>
             </Router>
         </BrowserRouter>
