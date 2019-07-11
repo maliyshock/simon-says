@@ -21,7 +21,7 @@ ReactDOM.render(
         <BrowserRouter>
             <Router history={history}>
                 <div>
-                    <Route path={'/app'} component={App} />
+                    <Route path={'/'} component={App} />
                 </div>
             </Router>
         </BrowserRouter>
