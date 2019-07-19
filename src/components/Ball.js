@@ -22,7 +22,7 @@ class Ball extends Component {
         let timerId = setInterval( () => {
             if( this.props.gameProps.cycle < this.props.gameProps.maxGameCycle ) {
                 this.props.playSequence({
-                    sequence: this.props.sequence,
+                    sequence: this.props.sequence.song,
                     cycle: this.props.gameProps.cycle,
                     maxGameCycle: this.props.gameProps.maxGameCycle
                 });
@@ -71,7 +71,6 @@ class Ball extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if(this.props.active) {
-            console.log(this.props.color);
             this.myTween = new TimelineLite({paused: true})
                 .to(this.myElement, 0, { backgroundColor: this.hexToRgbA(this.props.color.value, 0.3)})
                 .to(this.myElement, 0.2, { backgroundColor: this.hexToRgbA(this.props.color.value, 1)})
@@ -101,7 +100,7 @@ class Ball extends Component {
         }
 
         return(
-            <div className={itemClassNames} ref={li => this.myElement = li}>
+            <div key={this.props.name} className={itemClassNames} ref={li => this.myElement = li}>
                 <button
                     className={buttonClassNames}
                     onClick={ () => this.clickOnButton()  }

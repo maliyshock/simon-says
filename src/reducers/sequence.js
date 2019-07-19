@@ -41,15 +41,19 @@ function generateSequence(maxCycle) {
     return sequence;
 }
 
-export function sequence(state = [], action) {
+const initialState = {
+    song: ['BETHA','BETHA','BETHA']
+};
+
+export function sequenceReducer(state = initialState, action) {
     switch(action.type){
         case CREATE_SEQUENCE:
-            return  generateSequence(MAX_CYCLE);
+            return  {...state, song: generateSequence(MAX_CYCLE)};
 
         case ADD_WORD:
             const sequence = action.payload;
 
-            return addWord(sequence);
+            return {...state, song: addWord(sequence)};
         default:
             return state;
     }

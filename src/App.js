@@ -27,7 +27,7 @@ class App extends Component {
                 // play current iteration
                 if( this.props.gameProps.cycle < this.props.gameProps.maxGameCycle ) {
                     this.props.playSequence({
-                        sequence: this.props.sequence,
+                        sequence: this.props.sequence.song,
                         cycle: this.props.gameProps.cycle,
                         maxGameCycle: this.props.gameProps.maxGameCycle
                     });
@@ -53,13 +53,15 @@ class App extends Component {
 
     render() {
         const {words, score, gameOver, level} = this.props.gameProps;
+        const dictionary = words.dictionary;
+
         let lineClassNames = 'buttons__line';
         let levelContainer = 'buttons__level-container';
+
         if(this.props.gameProps.buttonAvaliable) {
             lineClassNames = lineClassNames + ' active';
             levelContainer = levelContainer + ' active';
         }
-
 
         return (
             <main className="app">
@@ -98,13 +100,15 @@ class App extends Component {
                                         <div className="buttons__level-text">Level: {level}</div>
                                     </div>
                                     {
-                                        Object.keys(words).map(
-                                            (word) => {
+                                        Object.keys(dictionary).map(
+                                            (number) => {
+                                                const wordName = Object.keys(dictionary[number])[0];
+
                                                 return <Ball
-                                                    key={word}
-                                                    name={word}
-                                                    color={words[word].color}
-                                                    active={words[word].active}
+                                                    key={wordName}
+                                                    name={wordName}
+                                                    color={dictionary[number][wordName].color}
+                                                    active={dictionary[number][wordName].active}
                                                     avaliable={this.props.gameProps.buttonAvaliable}
                                                     play={this.play}
                                                 />
