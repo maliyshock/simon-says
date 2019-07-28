@@ -1,4 +1,4 @@
-import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD, INCREASE_LEVEL, START_GAME } from '../constants'
+import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD, INCREASE_LEVEL, START_GAME, START_SING } from '../constants'
 
 export function createSequence() {
     return async dispatch => {
@@ -27,6 +27,11 @@ export function playSequence(data) {
 export function giveControl() {
     return {
         type: GIVE_CONTROL
+    }
+}
+export function startSing() {
+    return {
+        type: START_SING
     }
 }
 

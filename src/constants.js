@@ -12,6 +12,7 @@ export const INCREASE_CYCLES = 'INCREASE_CYCLES';
 export const ADD_WORD = 'ADD_WORD';
 export const INCREASE_LEVEL = 'INCREASE_LEVEL';
 export const START_GAME = 'START_GAME';
+export const START_SING = 'START_SING';
 
 // names
 export const ALFA = 'ALFA';

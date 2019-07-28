@@ -66,8 +66,6 @@ class Ball extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if(this.props.active) {
-            // let sound = new Audio(this.props.sound);
-
             this.props.sound.start();
 
             this.myTween = new TimelineLite({paused: true})

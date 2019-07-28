@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 
 import {connect} from 'react-redux'
-import {createSequence, playSequence, giveControl, resetCycles, disableControl, startGame} from './actions/index';
+import {createSequence, playSequence, giveControl, resetCycles, disableControl, startGame, startSing} from './actions/index';
 import Ball from './components/Ball'
 import Beat from './components/Beat'
+import {play} from './helpers/helpers'
 import { ICONS } from './constants'
 
 class App extends Component {
@@ -20,11 +21,14 @@ class App extends Component {
             });
     }
 
-    // componentDidUpdate() {
-    //     if(this.props.gameProps.sing === true) {
-    //
-    //     }
-    // }
+    componentDidUpdate() {
+        // if(this.props.gameProps.sing === false) {
+            // this.props.createSequence()
+            //     .then( () => {
+            //         play(this.props);
+            //     });
+        // }
+    }
 
     // TODO: doubling with Ball.js . can I reuse it somehow ?
     // TODO: it seem it should be in actions, but there is dependency from props
@@ -87,6 +91,9 @@ class App extends Component {
         let levelContainer = 'buttons__level-container';
 
         if(this.props.gameProps.buttonAvaliable) {
+            this.props.gameProps.goSound.reverse = true;
+            this.props.gameProps.goSound.start();
+
             lineClassNames = lineClassNames + ' active';
             levelContainer = levelContainer + ' active';
         }
@@ -133,8 +140,6 @@ class App extends Component {
         return (
             <main className="app">
                 <div className="app__inner">
-                    <h1 className="app__title h2"> Simon says</h1>
-
                     <div className="app__waves">
                         {ICONS.WAVE}
                         {ICONS.WAVE}
@@ -145,7 +150,7 @@ class App extends Component {
                     }
 
                     {
-                        startGame ? this.playGround() : this.startScreen()
+                        (startGame && !gameOver) ? this.playGround() : this.startScreen()
                     }
                 </div>
             </main>
@@ -158,4 +163,4 @@ function mapStateToProps(state) {
     return {sequence, words, gameProps};
 }
 
-export default connect(mapStateToProps, {createSequence, playSequence, giveControl, resetCycles, disableControl, startGame})(App);
+export default connect(mapStateToProps, {createSequence, playSequence, giveControl, resetCycles, disableControl, startGame, startSing})(App);

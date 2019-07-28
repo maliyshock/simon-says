@@ -1,4 +1,25 @@
 
+function play(props) {
+    props.disableControl();
+    props.gameProps.goSound.reverse = true;
+    props.gameProps.goSound.start();
+
+    let timerId = setInterval( () => {
+        if( props.gameProps.cycle < props.gameProps.maxGameCycle ) {
+            props.playSequence({
+                sequence: props.sequence.song,
+                cycle: props.gameProps.cycle,
+                maxGameCycle: props.gameProps.maxGameCycle
+            });
+        } else {
+            clearInterval(timerId);
+            props.giveControl();
+            props.gameProps.goSound.start();
+            props.resetCycles();
+        }
+    }, 1300);
+}
+
 function hexToRgbA(hex, alpha){
     var c;
     if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
@@ -12,4 +33,4 @@ function hexToRgbA(hex, alpha){
     throw new Error('Bad Hex');
 }
 
-export {hexToRgbA}
+export {play, hexToRgbA}

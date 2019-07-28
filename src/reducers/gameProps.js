@@ -1,6 +1,6 @@
 
 import {MAX_CYCLE} from '../constants'
-import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, INCREASE_LEVEL, START_GAME  } from '../constants'
+import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, INCREASE_LEVEL, START_GAME, START_SING  } from '../constants'
 import {RED, GREEN, BLUE, ORANGE} from '../constants'
 import Tone from 'tone';
 
@@ -65,6 +65,7 @@ const initialGamePropsState = {
         THETHA: 3,
     },
     startGame: false,
+    sing: false,
     goSound: new Tone.Player({'url': go_sound, 'onload': ()=>{}}).toMaster(),
     cycle: 0,
     maxGameCycle: MAX_CYCLE,
@@ -100,7 +101,7 @@ export function gamePropsReducer(state = initialGamePropsState, action) {
             return { ...state, words: {dictionary:updatedDictionary}, cycle: nextCycle, buttonAvaliable: false };
 
         case GIVE_CONTROL:
-            return {...state, buttonAvaliable: true, words: initialWordsState};
+            return {...state, buttonAvaliable: true, words: initialWordsState, sing: false};
 
         case DISABLE_CONTROL:
             return {...state, buttonAvaliable: false};
@@ -122,6 +123,9 @@ export function gamePropsReducer(state = initialGamePropsState, action) {
 
         case START_GAME:
             return {...state, startGame: true};
+
+        case START_SING:
+            return {...state, sing: true};
 
         case GAME_OVER:
             const { gameOver } = action.payload;

@@ -42,7 +42,7 @@ function generateSequence(maxCycle) {
 }
 
 const initialState = {
-    song: ['BETHA','BETHA','BETHA']
+    song: []
 };
 
 export function sequenceReducer(state = initialState, action) {
