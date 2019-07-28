@@ -7,6 +7,7 @@ $transition-time: 0.3s;
 $med-transition-time: 0.7s;
 $long-transition-time: 1.25s;
 
+$start-screen:    100;
 $active-item:     50;
 $title:           40;
 $level-container: 40;
@@ -15,6 +16,9 @@ $list:            20;
 $waves:           1;
 $buttons:         5;
 
+@import "scss/nestings/vars/all-vars";
+@import "scss/nestings/mixins/all-mixins";
+
 svg {
   width:100%;
   overflow:visible;
@@ -22,6 +26,7 @@ svg {
 
 body {
   margin: 0;
+  overflow-x: hidden;
 }
 
 
@@ -31,17 +36,24 @@ h1,h2 {
 
 
 .h1 {
+
   font-size: 120px;
   line-height: 90px;
 }
 
 .h2 {
-  font-size: 72px;
-  line-height: 52px;
+
+  font-size: 64px;
+  line-height: 46px;
+
+  @include for-tablet-landscape-up {
+    font-size: 72px;
+    line-height: 52px;
+  }
 }
 
 .h3 {
-  font-size: 60px;
+  font-size: 24px;
 }
 
 
@@ -79,11 +91,19 @@ h1,h2 {
   }
 
   &__waves {
-    width: 100%;
     position: fixed;
     z-index: $waves;
     bottom: 0;
     left: 0;
+    width: 300%;
+
+    @include for-tablet-portrait-up {
+      width: 200%;
+    }
+
+    @include for-tablet-landscape-up {
+      width: 100%;
+    }
 
     & .wave:nth-last-child(1) {
       animation-duration: 10s;
@@ -96,12 +116,18 @@ h1,h2 {
     }
   }
   &__title {
-    position: relative;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 10px;
     z-index: $title;
 
-    width: 100%;
-
     text-align: center;
+
+    @include for-tablet-landscape-up {
+      position: relative;
+    }
+
 
     //transition: transform 1s;
     //transform: scale(4) translateY(100%);
@@ -116,18 +142,82 @@ h1,h2 {
   margin-bottom: auto;
 }
 
+.start-screen {
+  position: fixed;
+  z-index: $start-screen;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+
+  background: radial-gradient(512.00px at 50% 50%, #575757 0%, #333333 100%);
+
+  color: #fff;
+  text-align: center;
+
+  &.active {
+    transition: transform $transition-time;
+    transform: translateY(-100%);
+  }
+
+  &__title {
+    width: 100%;
+
+    line-height: 1.3em;
+
+    font-weight: 400;
+  }
+
+  &__button-container {
+    margin-top: 20px;
+  }
+}
+
+.button {
+  padding:16px 24px;
+
+  background-color: transparent;
+  border-radius: 3px;
+
+  border: 2px solid white;
+
+  font-size: 18px;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  &:hover {
+
+  }
+}
+
 .buttons {
   $c: &;
 
   position: relative;
   z-index: $buttons;
 
-  width: 35%;
+  width: 90%;
+
   max-width: 800px;
 
   margin: 0 auto;
 
   transform: rotate(45deg);
+
+  @include for-tablet-portrait-up {
+    width: 65%;
+  }
+
+  @include for-tablet-landscape-up {
+    width: 35%;
+  }
+
 
   &:before {
     display: block;
@@ -148,9 +238,9 @@ h1,h2 {
     margin: 0;
 
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 40px;
+    //display: grid;
+    //grid-template-columns: 1fr 1fr;
+    //grid-gap: 40px;
   }
 
   &__list {
@@ -275,11 +365,11 @@ h1,h2 {
   }
 
   &__line {
-    width: 100px;
+    width: 20%;
     height: 85%;
 
     position: absolute;
-    left: calc(50% - 50px);
+    left: calc(50% - 10%);
     top: 7.5%;
     z-index: $line;
 
@@ -345,7 +435,7 @@ h1,h2 {
   }
 
   &__button {
-    padding: 40px;
+    padding: 10%;
     width: 100%;
     height: 100%;
 
@@ -393,6 +483,11 @@ h1,h2 {
       }
     }
   }
+}
+
+.play-ground {
+  width: 100%;
+  height: 100%;
 }
 
 @keyframes wave {

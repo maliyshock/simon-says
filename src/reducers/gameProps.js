@@ -1,7 +1,14 @@
 
 import {MAX_CYCLE} from '../constants'
-import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, INCREASE_LEVEL } from '../constants'
+import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, INCREASE_LEVEL, START_GAME  } from '../constants'
 import {RED, GREEN, BLUE, ORANGE} from '../constants'
+import Tone from 'tone';
+
+import alfa_sound from '../samples/alfa.mp3';
+import omega_sound from '../samples/omega.mp3';
+import betha_sound from '../samples/betha.mp3';
+import thetha_sound from '../samples/thetha.mp3';
+import go_sound from '../samples/go.mp3';
 
 
 const initialWordsState = {
@@ -12,6 +19,7 @@ const initialWordsState = {
                     name: 'blue',
                     value: BLUE
                 },
+                sound: new Tone.Player({"url": alfa_sound}).toMaster(),
                 active: false
             }
         },
@@ -21,6 +29,7 @@ const initialWordsState = {
                     name: 'orange',
                     value: ORANGE
                 },
+                sound: new Tone.Player({"url": omega_sound}).toMaster(),
                 active: false
             },
         },
@@ -30,6 +39,7 @@ const initialWordsState = {
                     name: 'red',
                     value: RED
                 },
+                sound: new Tone.Player({"url": betha_sound}).toMaster(),
                 active: false
             },
         },
@@ -39,6 +49,7 @@ const initialWordsState = {
                     name: 'green',
                     value: GREEN
                 },
+                sound: new Tone.Player({"url": thetha_sound}).toMaster(),
                 active: false
             }
         }
@@ -53,6 +64,8 @@ const initialGamePropsState = {
         BETHA: 2,
         THETHA: 3,
     },
+    startGame: false,
+    goSound: new Tone.Player({'url': go_sound, 'onload': ()=>{}}).toMaster(),
     cycle: 0,
     maxGameCycle: MAX_CYCLE,
     buttonAvaliable: false,
@@ -106,6 +119,9 @@ export function gamePropsReducer(state = initialGamePropsState, action) {
         case SUCCESS_CHOICE:
             const { score, cycle } = action.payload;
             return { ...state,  cycle, score };
+
+        case START_GAME:
+            return {...state, startGame: true};
 
         case GAME_OVER:
             const { gameOver } = action.payload;

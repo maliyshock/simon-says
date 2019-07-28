@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { ICONS } from '../constants'
 import {TimelineLite, Elastic} from "gsap/TweenMax";
+import {hexToRgbA} from '../helpers/helpers'
 import {checkChoice, playSequence, giveControl, resetCycles, disableControl, increaseCycles, increaseLevel, addWord} from '../actions/index';
-
-
 
 class Ball extends Component {
     constructor(props) {
@@ -15,11 +14,16 @@ class Ball extends Component {
         this.myTween = null;
     }
 
-    // TODO: doubling with app.js . can I reuse it somehow ?
-    play() {
-        this.props.disableControl();
+    // TODO: doubling with Ball.js . can I reuse it somehow ?
+    // TODO: it seem it should be in actions, but there is dependency from props
+    // TODO: can I rid this thing of... Every stage starts from only first word. And then it handled by clicks
+    // I can not remove it, because it would be a costle. Can I move it to actions? I think I can try
+    // but there is a dependency of props. They are not gonna update every cycle. I need to understand that
 
+    // decision: transfer the logic to action. Leave here only props and set interval
+    play() {
         let timerId = setInterval( () => {
+            // play current iteration
             if( this.props.gameProps.cycle < this.props.gameProps.maxGameCycle ) {
                 this.props.playSequence({
                     sequence: this.props.sequence.song,
@@ -27,6 +31,8 @@ class Ball extends Component {
                     maxGameCycle: this.props.gameProps.maxGameCycle
                 });
             } else {
+                // end of maxIterationalCycle reached
+                // add maxIterationalCycle + 1 < maxCycle
                 clearInterval(timerId);
                 this.props.giveControl();
                 this.props.resetCycles();
@@ -35,7 +41,9 @@ class Ball extends Component {
     }
 
     clickOnButton() {
-        const { sequence } = this.props;
+        const { song } = this.props.sequence;
+        this.props.sound.start();
+
         const word = this.props.name;
         const { cycle, score, maxGameCycle, level } = this.props.gameProps;
 
@@ -43,43 +51,34 @@ class Ball extends Component {
             this.props.disableControl();
         }
 
-        this.props.checkChoice(sequence, word, cycle,  maxGameCycle,  score)
+        this.props.checkChoice(song, word, cycle,  maxGameCycle,  score)
             .then( ()=> {
                 if( this.props.gameProps.cycle === this.props.gameProps.maxGameCycle ) {
                     this.props.resetCycles();
                     this.props.increaseCycles(maxGameCycle);
                     this.props.increaseLevel(level);
-                    this.props.addWord(sequence);
-                    this.play();
+                    this.props.addWord(song);
+                    this.play(this.props);
                 }
             });
-    }
-
-    hexToRgbA(hex, alpha){
-        var c;
-        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-            c= hex.substring(1).split('');
-            if(c.length== 3){
-                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-            }
-            c= '0x'+c.join('');
-            return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
-        }
-        throw new Error('Bad Hex');
     }
 
 
     componentDidUpdate(prevProps, prevState) {
         if(this.props.active) {
+            // let sound = new Audio(this.props.sound);
+
+            this.props.sound.start();
+
             this.myTween = new TimelineLite({paused: true})
-                .to(this.myElement, 0, { backgroundColor: this.hexToRgbA(this.props.color.value, 0.3)})
-                .to(this.myElement, 0.2, { backgroundColor: this.hexToRgbA(this.props.color.value, 1)})
-                .to(this.myElement, 0.8, { backgroundColor: this.hexToRgbA(this.props.color.value, 1)})
-                .to(this.myElement, 0.3, { backgroundColor: this.hexToRgbA(this.props.color.value, 0)})
+                .to(this.myElement, 0, { backgroundColor: hexToRgbA(this.props.color.value, 0.3)})
+                .to(this.myElement, 0.2, { backgroundColor: hexToRgbA(this.props.color.value, 1)})
+                .to(this.myElement, 0.8, { backgroundColor: hexToRgbA(this.props.color.value, 1)})
+                .to(this.myElement, 0.3, { backgroundColor: hexToRgbA(this.props.color.value, 0)})
                 .play();
             this.myTween = new TimelineLite({paused: true})
                 .to(this.myElement, 1, { ease: Elastic.easeOut.config(2, 0.3), y: '-5%', x: '-5%'})
-                .to(this.myElement, 0.3,{backgroundColor: this.hexToRgbA(this.props.color.value, 0.3), y: '0%', x: '0%' })
+                .to(this.myElement, 0.3,{backgroundColor: hexToRgbA(this.props.color.value, 0.3), y: '0%', x: '0%' })
                 .play();
         }
     }

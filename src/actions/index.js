@@ -1,4 +1,4 @@
-import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD, INCREASE_LEVEL } from '../constants'
+import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD, INCREASE_LEVEL, START_GAME } from '../constants'
 
 export function createSequence() {
     return async dispatch => {
@@ -7,7 +7,7 @@ export function createSequence() {
                 type: CREATE_SEQUENCE
             });
 
-            resolve()
+            resolve();
         })
     };
 }
@@ -63,16 +63,18 @@ export function increaseLevel(level) {
     }
 }
 
+export function startGame () {
+    return {
+        type: START_GAME
+    }
+}
+
 
 function isChoiceCorrect(sequence, cycle, word) {
     return sequence[cycle] === word;
 }
 
 export function checkChoice(sequence, word, cycle,  maxGameCycle, score) {
-    // console.log(isChoiceCorrect(sequence, cycle, word), 'isChoiceCorrect(sequence, cycle, word)');
-    // console.log((nextMaxIterationalCycle < maxGameCycle), 'inextMaxIterationalCycle < maxGameCycle');
-    // console.log(isChoiceCorrect(sequence, cycle, word) && (nextMaxIterationalCycle < maxGameCycle));
-
     if (isChoiceCorrect(sequence, cycle, word) && cycle < maxGameCycle) {
         return async dispatch => {
             return new Promise( (resolve, reject) => {
@@ -84,7 +86,6 @@ export function checkChoice(sequence, word, cycle,  maxGameCycle, score) {
                 resolve()
             })
         };
-
     }
     else {
         return async dispatch => {
@@ -93,11 +94,9 @@ export function checkChoice(sequence, word, cycle,  maxGameCycle, score) {
                     type: GAME_OVER,
                     payload: { gameOver: true }
                 });
-
                 resolve()
             })
         };
     }
-
 }
 

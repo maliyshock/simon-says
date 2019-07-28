@@ -11,6 +11,7 @@ export const DISABLE_CONTROL = 'DISABLE_CONTROL';
 export const INCREASE_CYCLES = 'INCREASE_CYCLES';
 export const ADD_WORD = 'ADD_WORD';
 export const INCREASE_LEVEL = 'INCREASE_LEVEL';
+export const START_GAME = 'START_GAME';
 
 // names
 export const ALFA = 'ALFA';

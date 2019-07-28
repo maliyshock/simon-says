@@ -1,0 +1,115 @@
+$white:                 #ffffff;
+$_15:                   #f9f9fa;
+$_50:                   #eaeaed;
+//$light-gray: #eaeaed;
+$gray:                  #e0dfe5;
+$dark-gray:             #696969;
+$black:                 #333333;
+
+$_900:                  #27253e;
+$_800:                  #373450;
+$blue-darker-gray:      #403D5A;
+$_400:                  #6b6883;
+$_200:                  #a8a6b6;
+$blue-gray:             #858299;
+$blue-light-gray:       #cbcad3;
+$_100:                  #cbcad3;
+$blue:                  #00b9f1;
+$danger:                #ff403d;
+
+// buttons
+$button:                $blue;
+$button-text:           $white;
+$button-bd-radius:      3px;
+
+// navigation
+$nav-links-active:      $blue;
+$header-mobile-links:   $_900;
+$header-mobile-borders: $_50;
+$nav-links-dark:        $_900;
+$burger-on-light-bg:    $_900;
+$header-cross:          $_400;
+
+// typography
+$text-on-white-bg:      $_400;
+$title-on-drk-bg:       $blue-light-gray;
+$separator:             $blue-darker-gray;
+
+// article
+$article-title:         $_900;
+
+// links
+$link:                  $blue;
+
+// image-list
+$image-list-bd-radius:  6px;
+$image-list-overlay:    $_900;
+
+// tabs
+$tabs-title:            $_400;
+$tabs-border:           $_50;
+$active-tab:            $blue;
+
+// blockquote
+$blockquote-text:       $_900;
+$blockquote-name:       $_400;
+
+// logos
+$company-logo:          $_200;
+
+// roadmap
+$roadmap-text:          $_200;
+$roadmap-border:        $blue-darker-gray;
+
+$iconed-copies-icon:    $blue;
+$iconed-copies-title:   $_900;
+
+// form
+$form-bg:               $_800;
+$form-bd-radius:        6px;
+$form-logo-bg:          $blue;
+$form-logo-color:       $white;
+$form-error:            $danger;
+
+// dropdown
+$dropdown-hover-bg:     #f4f4f6;
+$dropdown-list-shadw:   transparentize($_900, 0.9);
+$dropdown-list:         $white;
+$dropdown-placeholder:  $_400;
+$dropdown-text:         $_900;
+$dropdown-icon:         $blue;
+$dropdown-radius:         2px;
+$dropdown-bdrs-hover:   $_100;
+
+// input
+$input-radius:          2px;
+$input-bg:              $white;
+$input-border:          $gray;
+$input-border-hover:    $_100;
+$input-placeholder:     $_200;
+$input-color:           $_900;
+$input-outline:         $blue;
+
+// accordion
+$accordion-title:       $_900;
+$accordion-title-hover: $blue;
+$accordion-text:        $_400;
+$accordion-border:      $_50;
+
+// logo
+$logo-text:             $_400;
+
+// footer
+$footer-text:           $_400;
+
+// modificators
+$bg-dark:               $_900;
+
+// socials
+$social-icon:           $blue;
+
+// contacts
+$contact-text:          $_200;
+
+
+
