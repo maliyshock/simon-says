@@ -8,6 +8,7 @@ $med-transition-time: 0.7s;
 $long-transition-time: 1.25s;
 
 $start-screen:    100;
+$loading-screen:  150;
 $active-item:     50;
 $title:           40;
 $level-container: 40;
@@ -115,6 +116,7 @@ h1,h2 {
       opacity: .3;
     }
   }
+
   &__title {
     position: absolute;
     width: 100%;
@@ -142,11 +144,9 @@ h1,h2 {
   margin-bottom: auto;
 }
 
-.start-screen {
-  position: fixed;
-  z-index: $start-screen;
-  width: 100%;
-  height: 100%;
+.loading-screen, .end-screen, .start-screen  {
+  position: relative;
+  z-index: 2;
 
   display: flex;
   flex-wrap: wrap;
@@ -154,9 +154,35 @@ h1,h2 {
   align-content: center;
   justify-content: center;
 
-  background: radial-gradient(512.00px at 50% 50%, #575757 0%, #333333 100%);
+  width: 100%;
+  height: 100%;
 
-  color: #fff;
+  text-align: center;
+
+  &__title {
+    width: 100%;
+
+    line-height: 1.3em;
+
+    font-weight: 400;
+  }
+}
+
+.start-screen, .loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.start-screen {
+  z-index: $start-screen;
+
+  background: transparentize(white, 0.75);
+
+  //color: #fff;
   text-align: center;
 
   &.active {
@@ -164,39 +190,13 @@ h1,h2 {
     transform: translateY(-100%);
   }
 
-  &__title {
-    width: 100%;
-
-    line-height: 1.3em;
-
-    font-weight: 400;
-  }
-
   &__button-container {
     margin-top: 20px;
   }
 }
 
-.end-screen {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-
-
-  width: 100%;
-  height: 100%;
-
-  text-align: center;
-
-  &__title {
-    width: 100%;
-
-    line-height: 1.3em;
-
-    font-weight: 400;
-  }
+.loading-screen {
+  z-index: $loading-screen;
 }
 
 .button {
@@ -205,17 +205,11 @@ h1,h2 {
   background-color: transparent;
   border-radius: 3px;
 
-  border: 2px solid white;
+  border: 2px solid $black;
 
   font-size: 18px;
 
-  color: #fff;
-
   cursor: pointer;
-
-  &:hover {
-
-  }
 }
 
 .buttons {
@@ -274,29 +268,78 @@ h1,h2 {
   &__item {
     &--color-orange {
       background-color: transparentize($orange, 0.7);
+
+      &:after {
+        color: $orange;
+      }
     }
 
     &--color-blue {
       background-color: transparentize($blue, 0.7);
+
+      &:after {
+        color: $blue;
+      }
     }
 
     &--color-red {
       background-color: transparentize($red, 0.7);
+
+      &:after {
+        color: $red;
+      }
     }
 
     &--color-green {
       background-color: transparentize($green, 0.7);
+
+      &:after {
+        color: $green;
+      }
     }
   }
 
   &__item {
     display: flex;
+    position: relative;
     flex-basis: calc(50% - 20px);
     max-width: calc(50% - 20px);
     height: 100%;
     max-height: calc(50% - 20px);
 
     margin-bottom: 20px;
+
+    &:after {
+      content:'';
+      position: absolute;
+      top: 0;
+      z-index:0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 100%;
+      height: 100%;
+
+      border-radius: 100%;
+
+      text-transform: uppercase;
+      font-size: 148px;
+      font-weight: 900;
+
+      transform: rotate(-45deg);
+
+      opacity: 0;
+
+      transition: transform $transition-time, opacity $transition-time;
+    }
+
+    &:hover:not(.disabled) {
+      &:after {
+        opacity: 0.3;
+      }
+    }
 
     &:nth-child(2n+1) {
       margin-left: 20px;
@@ -313,17 +356,58 @@ h1,h2 {
 
     &:nth-last-child(4) {
       order: 1;
+
+      &:after {
+        content:'w';
+      }
+
+      &:hover:not(.disabled) {
+        &:after {
+          transform: rotate(-45deg) translateX(0%) translateY(-70%);
+        }
+      }
     }
 
     &:nth-last-child(3) {
       order: 2;
+
+      &:after {
+        content: 'd';
+      }
+
+      &:hover:not(.disabled) {
+        &:after {
+          transform: rotate(-45deg) translateX(70%) translateY(0%);
+        }
+      }
     }
 
     &:nth-last-child(2) {
       order: 3;
+
+      &:after {
+        content:'a';
+      }
+
+      &:hover:not(.disabled) {
+        &:after {
+          transform: rotate(-45deg) translateX(-70%) translateY(0%);
+        }
+      }
     }
+
     &:last-child {
       order: 4;
+
+      &:after {
+        content:'s';
+      }
+
+      &:hover:not(.disabled) {
+        &:after {
+          transform: rotate(-45deg) translateX(0%) translateY(70%);
+        }
+      }
     }
 
     &.active, &:hover:not(.disabled) {
@@ -457,6 +541,9 @@ h1,h2 {
   }
 
   &__button {
+    position: relative;
+    z-index: 1;
+
     padding: 10%;
     width: 100%;
     height: 100%;
@@ -468,15 +555,17 @@ h1,h2 {
 
     transition: background-color $transition-time, transform $transition-time;
 
-    &:hover:not(:disabled) {
-      cursor: pointer;
-      transform: translateY(-2.5%) translateX(-2.5%);
+    &:hover {
+      &:not(:disabled) {
+        cursor: pointer;
+        transform: translateY(-2.5%) translateX(-2.5%);
+      }
     }
 
     &--color-orange {
       background-color: transparentize($orange, 0.7);
 
-      &:hover:not(:disabled) {
+      .buttons__item:hover &:not(:disabled) {
         background-color: transparentize($orange, 0);
       }
     }
@@ -484,7 +573,7 @@ h1,h2 {
     &--color-blue {
       background-color: transparentize($blue, 0.7);
 
-      &:hover:not(:disabled) {
+      .buttons__item:hover &:not(:disabled) {
         background-color: transparentize($blue, 0);
       }
     }
@@ -492,7 +581,7 @@ h1,h2 {
     &--color-red {
       background-color: transparentize($red, 0.7);
 
-      &:hover:not(:disabled) {
+      .buttons__item:hover &:not(:disabled) {
         background-color: transparentize($red, 0);
       }
     }
@@ -500,7 +589,7 @@ h1,h2 {
     &--color-green {
       background-color: transparentize($green, 0.7);
 
-      &:hover:not(:disabled) {
+      .buttons__item:hover &:not(:disabled) {
         background-color: transparentize($green, 0);
       }
     }
@@ -510,6 +599,53 @@ h1,h2 {
 .play-ground {
   width: 100%;
   height: 100%;
+}
+
+.play-ground-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.loading-screen {
+  &__loader-container {
+    max-width: 600px;
+    width: 100%;
+  }
+
+  &__loader {
+
+  }
+}
+
+.loader {
+  position: relative;
+
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+
+  background-color: #333;
+
+  border-radius: 4px;
+  box-shadow: inset 4px 4px $black;
+
+  &__bar {
+    position: absolute;
+    top: 0;
+    right: 100%;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: $blue;
+
+    transform: translateY(0%);
+    transition: transform $transition-time;
+  }
+}
+
+.button {
+  cursor: pointer;
 }
 
 @keyframes wave {

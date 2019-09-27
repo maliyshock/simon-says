@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import PublishSubscribe from 'publish-subscribe-js'
+
 import { ICONS } from '../constants'
 import {TimelineLite, Elastic} from "gsap/TweenMax";
-import {hexToRgbA} from '../helpers/helpers'
-import {checkChoice, playSequence, giveControl, resetCycles, disableControl, increaseCycles, increaseLevel, addWord} from '../actions/index';
+import {hexToRgbA, playSong} from '../helpers/helpers'
+import {highlightButton, giveControl, resetCycles, disableControl, increaseLevel, addWord, checkChoice} from '../actions/index';
 
 class Ball extends Component {
     constructor(props) {
@@ -12,37 +14,23 @@ class Ball extends Component {
         this.myElement = null;
         // reference to the animation
         this.myTween = null;
+
+        this.keyHandler = this.keyHandler.bind(this);
+        this.buttonHandler = this.buttonHandler.bind(this);
     }
 
-    // TODO: doubling with Ball.js . can I reuse it somehow ?
-    // TODO: it seem it should be in actions, but there is dependency from props
-    // TODO: can I rid this thing of... Every stage starts from only first word. And then it handled by clicks
-    // I can not remove it, because it would be a costle. Can I move it to actions? I think I can try
-    // but there is a dependency of props. They are not gonna update every cycle. I need to understand that
-
-    // decision: transfer the logic to action. Leave here only props and set interval
-    play() {
-        let timerId = setInterval( () => {
-            // play current iteration
-            if( this.props.gameProps.cycle < this.props.gameProps.maxGameCycle ) {
-                this.props.playSequence({
-                    sequence: this.props.sequence.song,
-                    cycle: this.props.gameProps.cycle,
-                    maxGameCycle: this.props.gameProps.maxGameCycle
-                });
-            } else {
-                // end of maxIterationalCycle reached
-                // add maxIterationalCycle + 1 < maxCycle
-                clearInterval(timerId);
-                this.props.giveControl();
-                this.props.resetCycles();
+    keyHandler(data, args) {
+        if(this.props.avaliable) {
+            if(args[1] === this.props.obj.keycode) {
+                this.buttonHandler();
+                this.highlight();
             }
-        }, 1300);
+        }
     }
 
-    clickOnButton() {
+    buttonHandler() {
         const { song } = this.props.sequence;
-        this.props.sound.start();
+        // this.props.goSound.start();
 
         const word = this.props.name;
         const { cycle, score, maxGameCycle, level } = this.props.gameProps;
@@ -51,33 +39,42 @@ class Ball extends Component {
             this.props.disableControl();
         }
 
+        this.highlight();
+
+
         this.props.checkChoice(song, word, cycle,  maxGameCycle,  score)
             .then( ()=> {
-                if( this.props.gameProps.cycle === this.props.gameProps.maxGameCycle ) {
+                if( this.props.gameProps.cycle === song.length ) {
                     this.props.resetCycles();
-                    this.props.increaseCycles(maxGameCycle);
                     this.props.increaseLevel(level);
                     this.props.addWord(song);
-                    this.play(this.props);
+                    playSong(this.props);
                 }
             });
+    }
+
+    componentDidMount() {
+        PublishSubscribe.subscribe('keyboard_is_listened', this.keyHandler);
+    }
+
+    highlight() {
+        this.myTween = new TimelineLite({paused: true})
+            .to(this.myElement, 0, { backgroundColor: hexToRgbA(this.props.color.value, 0.3)})
+            .to(this.myElement, 0.2, { backgroundColor: hexToRgbA(this.props.color.value, 1)})
+            .to(this.myElement, 0.8, { backgroundColor: hexToRgbA(this.props.color.value, 1)})
+            .to(this.myElement, 0.3, { backgroundColor: hexToRgbA(this.props.color.value, 0)})
+            .play();
+        this.myTween = new TimelineLite({paused: true})
+            .to(this.myElement, 1, { ease: Elastic.easeOut.config(2, 0.3), y: '-5%', x: '-5%'})
+            .to(this.myElement, 0.3,{backgroundColor: hexToRgbA(this.props.color.value, 0.3), y: '0%', x: '0%' })
+            .play();
     }
 
 
     componentDidUpdate(prevProps, prevState) {
         if(this.props.active) {
             this.props.sound.start();
-
-            this.myTween = new TimelineLite({paused: true})
-                .to(this.myElement, 0, { backgroundColor: hexToRgbA(this.props.color.value, 0.3)})
-                .to(this.myElement, 0.2, { backgroundColor: hexToRgbA(this.props.color.value, 1)})
-                .to(this.myElement, 0.8, { backgroundColor: hexToRgbA(this.props.color.value, 1)})
-                .to(this.myElement, 0.3, { backgroundColor: hexToRgbA(this.props.color.value, 0)})
-                .play();
-            this.myTween = new TimelineLite({paused: true})
-                .to(this.myElement, 1, { ease: Elastic.easeOut.config(2, 0.3), y: '-5%', x: '-5%'})
-                .to(this.myElement, 0.3,{backgroundColor: hexToRgbA(this.props.color.value, 0.3), y: '0%', x: '0%' })
-                .play();
+            this.highlight();
         }
     }
 
@@ -90,7 +87,6 @@ class Ball extends Component {
             itemClassNames = itemClassNames + ' disabled';
         }
 
-
         if(this.props.active) {
             buttonClassNames   = buttonClassNames + ' active';
             itemClassNames = itemClassNames + ' active'
@@ -100,8 +96,8 @@ class Ball extends Component {
             <div key={this.props.name} className={itemClassNames} ref={li => this.myElement = li}>
                 <button
                     className={buttonClassNames}
-                    onClick={ () => this.clickOnButton()  }
                     disabled={isDisabled}
+                    onClick={this.buttonHandler}
                 >
                     <span className="buttons__icon">{ ICONS[this.props.name] }</span>
                 </button>
@@ -116,4 +112,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, {checkChoice, playSequence, giveControl, resetCycles, disableControl, increaseCycles, increaseLevel, addWord} )(Ball);
+export default connect(mapStateToProps, {highlightButton, giveControl, resetCycles, disableControl, increaseLevel, addWord, checkChoice} )(Ball);

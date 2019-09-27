@@ -1,18 +1,25 @@
 import React, {Component} from 'react';
 
+import ALFA_SOUND from './samples/alfa.mp3';
+import OMEGA_SOUND from './samples/omega.mp3';
+import BETHA_SOUND from './samples/betha.mp3';
+import THETHA_SOUND from './samples/thetha.mp3';
+import GO_SOUND from './samples/go.mp3';
+
 export const CREATE_SEQUENCE = 'CREATE_SEQUENCE';
-export const PLAY_SEQUENCE = 'PLAY_SEQUENCE';
+export const HIGHLIGHT_BUTTON = 'HIGHLIGHT_BUTTON';
 export const GIVE_CONTROL = 'GIVE_CONTROL';
 export const SUCCESS_CHOICE = 'SUCCESS_CHOICE';
 export const GAME_OVER = 'GAME_OVER';
 
 export const RESET_CYCLES = 'RESET_CYCLES';
 export const DISABLE_CONTROL = 'DISABLE_CONTROL';
-export const INCREASE_CYCLES = 'INCREASE_CYCLES';
 export const ADD_WORD = 'ADD_WORD';
 export const INCREASE_LEVEL = 'INCREASE_LEVEL';
-export const START_GAME = 'START_GAME';
 export const START_SING = 'START_SING';
+export const ASSETS_LOADED = 'ASSETS_LOADED';
+export const ASSETS_LOADING = 'ASSETS_LOADING';
+export const START_NEW_GAME = 'START_NEW_GAME';
 
 // names
 export const ALFA = 'ALFA';
@@ -22,11 +29,26 @@ export const THETHA = 'THETHA';
 
 // colors
 export const ORANGE = '#FDBA63';
-export const BLUE = '#6FC3E0';
+export const BLUE = '#00b9f1';
 export const RED = '#FC6769';
 export const GREEN = '#A5C94B';
 
-export const MAX_CYCLE = 3;
+export const START_CYCLE = 3;
+
+export const SOUNDS_BANK = [GO_SOUND];
+
+export const SOUNDS_POSITIONS = {
+    GO_SOUND: 0,
+    ALFA: 10,
+    OMEGA: 20,
+    BETHA: 30,
+    THETHA: 40
+}
+
+SOUNDS_BANK[SOUNDS_POSITIONS.ALFA] = ALFA_SOUND;
+SOUNDS_BANK[SOUNDS_POSITIONS.OMEGA] = OMEGA_SOUND;
+SOUNDS_BANK[SOUNDS_POSITIONS.BETHA] = BETHA_SOUND;
+SOUNDS_BANK[SOUNDS_POSITIONS.THETHA] = THETHA_SOUND;
 
 
 export const ICONS = {

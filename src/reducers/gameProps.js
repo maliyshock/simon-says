@@ -1,15 +1,7 @@
-
-import {MAX_CYCLE} from '../constants'
-import { PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, INCREASE_LEVEL, START_GAME, START_SING  } from '../constants'
+import { HIGHLIGHT_BUTTON, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_LEVEL, START_SING, ASSETS_LOADED, ASSETS_LOADING, START_NEW_GAME } from '../constants'
 import {RED, GREEN, BLUE, ORANGE} from '../constants'
-import Tone from 'tone';
 
-import alfa_sound from '../samples/alfa.mp3';
-import omega_sound from '../samples/omega.mp3';
-import betha_sound from '../samples/betha.mp3';
-import thetha_sound from '../samples/thetha.mp3';
-import go_sound from '../samples/go.mp3';
-
+import {generateSequence} from '../helpers/helpers';
 
 const initialWordsState = {
     dictionary: [
@@ -17,9 +9,9 @@ const initialWordsState = {
             ALFA: {
                 color: {
                     name: 'blue',
-                    value: BLUE
+                    value: BLUE,
                 },
-                sound: new Tone.Player({"url": alfa_sound}).toMaster(),
+                keycode: 'w',
                 active: false
             }
         },
@@ -29,17 +21,7 @@ const initialWordsState = {
                     name: 'orange',
                     value: ORANGE
                 },
-                sound: new Tone.Player({"url": omega_sound}).toMaster(),
-                active: false
-            },
-        },
-        {
-            BETHA: {
-                color: {
-                    name: 'red',
-                    value: RED
-                },
-                sound: new Tone.Player({"url": betha_sound}).toMaster(),
+                keycode: 'd',
                 active: false
             },
         },
@@ -49,7 +31,17 @@ const initialWordsState = {
                     name: 'green',
                     value: GREEN
                 },
-                sound: new Tone.Player({"url": thetha_sound}).toMaster(),
+                keycode: 'a',
+                active: false
+            }
+        },
+        {
+            BETHA: {
+                color: {
+                    name: 'red',
+                    value: RED
+                },
+                keycode: 's',
                 active: false
             }
         }
@@ -61,23 +53,23 @@ const initialGamePropsState = {
     positions: {
         ALFA: 0,
         OMEGA: 1,
-        BETHA: 2,
-        THETHA: 3,
+        THETHA: 2,
+        BETHA: 3,
     },
-    startGame: false,
+    sounds: [],
+    isLoading: true,
+    loadValue: 0,
+    gameStarted: false,
     sing: false,
-    goSound: new Tone.Player({'url': go_sound, 'onload': ()=>{}}).toMaster(),
     cycle: 0,
-    maxGameCycle: MAX_CYCLE,
     buttonAvaliable: false,
     score: 0,
     gameOver: false,
     level: 1
 };
 
-//fkng immutability!!! Bitch!
-function changeActiveWord(dictionaryArray, position, activeButton) {
 
+function changeActiveWord(dictionaryArray, position, activeButton) {
     let newArray = dictionaryArray.slice();
 
     const newWord = {
@@ -91,12 +83,10 @@ function changeActiveWord(dictionaryArray, position, activeButton) {
     return newArray;
 }
 
-
 export function gamePropsReducer(state = initialGamePropsState, action) {
     switch(action.type){
-        case PLAY_SEQUENCE:
+        case HIGHLIGHT_BUTTON:
             const { activeButton, nextCycle } = action.payload;
-            // console.log(state.positions[activeButton]);
             const updatedDictionary =  changeActiveWord(initialGamePropsState.words.dictionary, state.positions[activeButton], activeButton);
             return { ...state, words: {dictionary:updatedDictionary}, cycle: nextCycle, buttonAvaliable: false };
 
@@ -113,16 +103,17 @@ export function gamePropsReducer(state = initialGamePropsState, action) {
             const level = action.payload;
             return {...state, level: level+1};
 
-        case INCREASE_CYCLES:
-            const maxGameCycle = action.payload;
-            return {...state, maxGameCycle: maxGameCycle+1};
-
         case SUCCESS_CHOICE:
             const { score, cycle } = action.payload;
             return { ...state,  cycle, score };
 
-        case START_GAME:
-            return {...state, startGame: true};
+        case ASSETS_LOADED:
+            return { ...state,  isLoading: false, gameStarted: true };
+
+        case ASSETS_LOADING:
+            const { percent } = action.payload;
+
+            return { ...state,  loadValue: percent };
 
         case START_SING:
             return {...state, sing: true};
@@ -131,7 +122,20 @@ export function gamePropsReducer(state = initialGamePropsState, action) {
             const { gameOver } = action.payload;
             return { ...state, gameOver };
 
+        case START_NEW_GAME: {
+            return  {
+                ...state,
+                gameStarted: true,
+                gameOver: false,
+                sing: true,
+                level: 1,
+                cycle: 0,
+                score: 0,
+                buttonAvaliable: false,
+            }
+        }
+
         default:
             return state;
     }
-};
+}

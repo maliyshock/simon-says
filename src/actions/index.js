@@ -1,4 +1,4 @@
-import { CREATE_SEQUENCE, PLAY_SEQUENCE, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, INCREASE_CYCLES, ADD_WORD, INCREASE_LEVEL, START_GAME, START_SING } from '../constants'
+import { CREATE_SEQUENCE, HIGHLIGHT_BUTTON, GIVE_CONTROL, SUCCESS_CHOICE, GAME_OVER, RESET_CYCLES, DISABLE_CONTROL, ADD_WORD, INCREASE_LEVEL, START_SING, START_CYCLE, ASSETS_LOADED, ASSETS_LOADING, START_NEW_GAME } from '../constants'
 
 export function createSequence() {
     return async dispatch => {
@@ -12,14 +12,14 @@ export function createSequence() {
     };
 }
 
-export function playSequence(data) {
-    const { sequence, cycle,  maxGameCycle} = data;
-    const nextCycle = (cycle < maxGameCycle) ? cycle + 1 : cycle;
+export function highlightButton(data) {
+    const { sequence, cycle} = data;
+    const nextCycle = (cycle < START_CYCLE) ? cycle + 1 : cycle;
 
     const activeButton = sequence[cycle];
 
     return {
-        type: PLAY_SEQUENCE,
+        type: HIGHLIGHT_BUTTON,
         payload: { activeButton, nextCycle }
     }
 }
@@ -41,6 +41,19 @@ export function disableControl() {
     }
 }
 
+export function assetsLoaded() {
+    return {
+        type: ASSETS_LOADED
+    }
+}
+
+export function updateAssetsLoading (percent) {
+    return {
+        type: ASSETS_LOADING,
+        payload: {percent}
+    }
+}
+
 export function resetCycles() {
     return {
         type: RESET_CYCLES
@@ -54,13 +67,6 @@ export function addWord(sequence) {
     }
 }
 
-export function increaseCycles(maxGameCycle) {
-    return {
-        type: INCREASE_CYCLES,
-        payload: maxGameCycle
-    }
-}
-
 export function increaseLevel(level) {
     return {
         type: INCREASE_LEVEL,
@@ -68,19 +74,12 @@ export function increaseLevel(level) {
     }
 }
 
-export function startGame () {
-    return {
-        type: START_GAME
-    }
-}
-
-
 function isChoiceCorrect(sequence, cycle, word) {
     return sequence[cycle] === word;
 }
 
 export function checkChoice(sequence, word, cycle,  maxGameCycle, score) {
-    if (isChoiceCorrect(sequence, cycle, word) && cycle < maxGameCycle) {
+    if (isChoiceCorrect(sequence, cycle, word) ) {
         return async dispatch => {
             return new Promise( (resolve, reject) => {
                 dispatch({
@@ -105,3 +104,8 @@ export function checkChoice(sequence, word, cycle,  maxGameCycle, score) {
     }
 }
 
+export function startNewGame() {
+    return {
+        type: START_NEW_GAME,
+    }
+}
