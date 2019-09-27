@@ -23,7 +23,6 @@ class Ball extends Component {
         if(this.props.avaliable) {
             if(args[1] === this.props.obj.keycode) {
                 this.buttonHandler();
-                this.highlight();
             }
         }
     }
@@ -40,7 +39,7 @@ class Ball extends Component {
         }
 
         this.highlight();
-
+        this.props.sound.start();
 
         this.props.checkChoice(song, word, cycle,  maxGameCycle,  score)
             .then( ()=> {
