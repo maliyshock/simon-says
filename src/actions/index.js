@@ -75,6 +75,9 @@ export function increaseLevel(level) {
 }
 
 function isChoiceCorrect(sequence, cycle, word) {
+    console.log('word', word);
+    console.log('cycle', cycle);
+    console.log('sequence[cycle]', sequence[cycle]);
     return sequence[cycle] === word;
 }
 
@@ -105,7 +108,13 @@ export function checkChoice(sequence, word, cycle,  maxGameCycle, score) {
 }
 
 export function startNewGame() {
-    return {
-        type: START_NEW_GAME,
-    }
+    return async dispatch => {
+        return new Promise( (resolve, reject) => {
+            dispatch({
+                type: START_NEW_GAME
+            });
+
+            resolve()
+        })
+    };
 }

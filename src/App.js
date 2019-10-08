@@ -53,9 +53,10 @@ class App extends Component {
 
     startNewGame() {
         this.props.createSequence();
-        this.props.startNewGame();
-        playSong(this.props).then( ()=> {
-            this.players[SOUNDS_POSITIONS.GO_SOUND].start();
+        this.props.startNewGame().then( () => {
+            playSong(this.props).then( () => {
+                this.players[SOUNDS_POSITIONS.GO_SOUND].start();
+            });
         });
     }
 
